@@ -10,7 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Classe qui interagit avec l'utilisateur. Crée l'équipage de la partie 2
+ * Classe qui interagit avec l'utilisateur. Elle crée l'équipage de la partie 2
  */
 public class Menu2 extends Menu {
 	
