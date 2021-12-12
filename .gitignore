@@ -1,7 +1,4 @@
 /bin/
 /doc/
-*.class
 *.classpath
 *.DS_Store
-*.project
-*.settings
