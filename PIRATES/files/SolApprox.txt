@@ -1,0 +1,3 @@
+nom_pirate_1:nom_objet_1
+nom_pirate_2:nom_objet_2
+nom_pirate_3:nom_objet_3
