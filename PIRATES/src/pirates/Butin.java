@@ -1,6 +1,5 @@
 package pirates;
 
-
 /**
  * Classe qui represente un trésor.
  * Chaque Butin est unique
