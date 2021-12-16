@@ -389,7 +389,7 @@ public class Equipage {
 		String a,b;
 
 		do {
-			System.out.println("Entrez le nom des pirates (lettre en majuscule) dont on veut échanger les objets");
+			System.out.println("Entrez le nom des pirates dont on veut échanger les objets");
 			a = Menu.saisieMot();
 			b = Menu.saisieMot();
 

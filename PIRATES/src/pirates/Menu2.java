@@ -210,6 +210,8 @@ public class Menu2 extends Menu {
 						butinAttribue = equipage.getPartage().get(p).getName();
 						try {
 							dataOutput.write(p.getName() + ":" + butinAttribue+"\n");
+							dataOutput.flush();
+							
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
