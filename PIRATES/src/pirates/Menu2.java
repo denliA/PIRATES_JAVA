@@ -51,7 +51,6 @@ public class Menu2 extends Menu {
 	   		 System.out.println("Données dans le fichier sont incorrectes");
 	   		 System.exit(1);
 		}
-		
 	}
 
 	/**
@@ -64,8 +63,10 @@ public class Menu2 extends Menu {
 		sc2 = new Scanner(dataInput);
 		sc2.useDelimiter(str);
 		while(sc2.hasNext()) {
-			mots.add(sc2.next());
+			//trim enleve les espaces qui trainent
+			mots.add(sc2.next().trim());
 		}
+		System.out.println(mots);
 		return mots; 
 	}
 	
@@ -86,6 +87,7 @@ public class Menu2 extends Menu {
 			indiceDeb = token.indexOf('(')+1;
 			indiceFin = token.indexOf(')');
 			mot = token.substring(indiceDeb, indiceFin);
+			mot = mot.trim();
 			if(token.startsWith("pirate")) {
 				equipage.ajoutPirate(new Pirate(mot));
 				nbPirate++;

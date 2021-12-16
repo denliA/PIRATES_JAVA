@@ -117,12 +117,12 @@ public class Equipage {
 	public void deteste(String s1,String s2) throws SaisieErroneeException {
 		Pirate a = getPirateFromPirateName(s1);
 		Pirate b = getPirateFromPirateName(s2);
-		if (a.equals(b)) {
-			System.out.println("Pas de self hate svp");
-			throw new SaisieErroneeException();
-		}
 		if((a==null) || (b==null)) {
 			System.out.println("Pirates n'existent pas");
+			throw new SaisieErroneeException();
+		}
+		if (a.equals(b)) {
+			System.out.println("Pas de self hate svp");
 			throw new SaisieErroneeException();
 		}
 		a.addHating(b);
