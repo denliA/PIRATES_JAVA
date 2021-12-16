@@ -145,7 +145,7 @@ public class Menu2 extends Menu {
 	 * 
 	 */
 	public void affiche() {
-		System.out.println("\n************************** Menu **************************");
+		System.out.println("\n*************************** Menu **************************");
 		System.out.println("Rentrez un chiffre selon l'option choisie");
 		System.out.println("1 : résolution automatique\n2 : résolution manuelle\n3 : sauvegarde\n4 : fin");
 		System.out.print(">");
