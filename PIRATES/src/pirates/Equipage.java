@@ -96,6 +96,7 @@ public class Equipage {
 	/**
 	 * Ajoute un pirate dans l'équipage
 	 * @param p	Pirate
+	 * @throws DataFichierErroneeException 
 	 */
 	public void ajoutPirate(Pirate p) {
 		pirates.add(p);

@@ -34,7 +34,7 @@ public class Pirate {
 	private boolean jealous;
 	
 	/**
-	 * Crée un pirate dont le nom va de A à Z (26 pirates au plus car 26 lettres dans alphabet)
+	 * Crée un pirate dont le nom va de A à Z
 	 *
 	 */
 	public Pirate() {

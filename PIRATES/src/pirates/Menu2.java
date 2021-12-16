@@ -79,6 +79,7 @@ public class Menu2 extends Menu {
 	 */
 	public void analyseData(ArrayList<String> tokens) throws DataFichierErroneeException {
 		int indiceDeb,indiceFin;
+		int nbButin=0;
 		nbPirate=0;
 		StringTokenizer st;
 		String mot,mot2;
@@ -94,11 +95,19 @@ public class Menu2 extends Menu {
 			}
 			mot = mot.trim();
 			if(token.startsWith("pirate")) {
+			/*	if (equipage.getPirates().contains(equipage.getPirateFromPirateName(mot))) {
+					throw new DataFichierErroneeException("Pirate "+mot+" existe déjà");
+				}*/
 				equipage.ajoutPirate(new Pirate(mot));
 				nbPirate++;
 			}
 			else if(token.startsWith("objet")) {
+/*
+				if (equipage.getButins().contains(equipage.getButinFromButinName(mot))) {
+					throw new DataFichierErroneeException("Butin "+mot+" existe déjà");
+				}*/
 				equipage.ajoutButin(new Butin(mot));
+				nbButin++;
 			}
 			else if(token.startsWith("deteste")) {
 				st = new StringTokenizer(mot,",");
@@ -126,6 +135,10 @@ public class Menu2 extends Menu {
 				if(p == null) {
 					throw new DataFichierErroneeException("Pirate " + p + "n'existe pas");
 				}
+				//si la liste de préférence a déjà été entrée
+				if(p.getPreference().size()==nbPirate) {
+					throw new DataFichierErroneeException("Liste de préférence déjà remplie");
+				}
 				//vérifie presence de tous les objets préférés
 	 			if(st.countTokens() != (nbPirate)) {
 	 				throw new DataFichierErroneeException("Liste de préference des butins incomplète");
@@ -139,14 +152,18 @@ public class Menu2 extends Menu {
 					}
 					p.addPreference(b);
 				}
+				//vérifie que la liste de préférence est complète
       		 	if(p.getPreference().size() != (nbPirate)) {
-      	         	System.out.println("Liste de préférence incorrecte pour : "+p.getName());
-      	         	System.exit(1);
+      	         	throw new DataFichierErroneeException("Liste de préférence incorrecte pour : "+p.getName());
       			 }
 			}
 			else {
+				System.out.println(token);
 				throw new DataFichierErroneeException("Lignes incorrectes dans le fichier");
 			}
+		}
+		if(nbPirate!=nbButin) {
+			throw new DataFichierErroneeException("Nombre de pirates different du nombre de trésors");
 		}
 	}
 	
