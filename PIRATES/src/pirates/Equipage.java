@@ -118,12 +118,10 @@ public class Equipage {
 		Pirate a = getPirateFromPirateName(s1);
 		Pirate b = getPirateFromPirateName(s2);
 		if((a==null) || (b==null)) {
-			System.out.println("Pirates n'existent pas");
-			throw new SaisieErroneeException();
+			throw new SaisieErroneeException("Pirates n'existent pas");
 		}
 		if (a.equals(b)) {
-			System.out.println("Pas de self hate svp");
-			throw new SaisieErroneeException();
+			throw new SaisieErroneeException("Pas de self hate svp");
 		}
 		a.addHating(b);
 		b.addHating(a);
@@ -192,7 +190,7 @@ public class Equipage {
 				return b;
 			}
 		}
-		System.out.println("Le butin " + name + " n'existe pas dans l'équipage");
+		//System.out.println("Le butin " + name + " n'existe pas dans l'équipage");
 		return null;
 	} 
 	
@@ -352,12 +350,10 @@ public class Equipage {
 			dict = partage;
 		}
 		if (!dict.containsKey(p1)) {
-			System.out.println("Pas de trésor attribué pour le pirate " + p1.getName());
-			throw new SaisieErroneeException();
+			throw new SaisieErroneeException("Pas de trésor attribué pour le pirate " + p1.getName());
 		}
 		if (!dict.containsKey(p2)) {
-			System.out.println("Pas de trésor attribué pour le pirate " + p2.getName());
-			throw new SaisieErroneeException();
+			throw new SaisieErroneeException("Pas de trésor attribué pour le pirate " + p2.getName());
 		}
 		// echange de butins
 		Butin tampon = dict.get(p1);
@@ -402,12 +398,10 @@ public class Equipage {
 				}
 			}
 			if (p1 == null) {
-				System.out.println("Le pirate " + a + " n'existe pas dans l'équipage");
-				throw new SaisieErroneeException();
+				throw new SaisieErroneeException("Le pirate " + a + " n'existe pas dans l'équipage");
 			}
 			if (p2 == null) {
-				System.out.println("Le pirate " + b + " n'existe pas dans l'équipage");
-				throw new SaisieErroneeException();
+				throw new SaisieErroneeException("Le pirate " + b + " n'existe pas dans l'équipage");
 			}
 		} while ((p1 == null) || (p2 == null));
 

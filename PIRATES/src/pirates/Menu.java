@@ -205,13 +205,11 @@ public class Menu {
 				//vérifie que le numéro de butin entré est correct (entre 1 et nbPirates)
 				chaine = saisieMot();
 				if (!chaine.matches(regex)) {
-					System.out.println("Mauvais numéro de trésor entré (1 -> " + nbPirate + ")");
-					throw new SaisieErroneeException();
+					throw new SaisieErroneeException("Mauvais numéro de trésor entré (1 -> " + nbPirate + ")");
 				}
 				k = equipage.getButinFromButinName("o" + chaine);
 				if(k==null) {
-					System.out.println("Trésor o" + chaine + " n'existe pas");
-					throw new SaisieErroneeException();
+					throw new SaisieErroneeException("Trésor o" + chaine + " n'existe pas");
 				}
 				p1.addPreference(k);
 				cpt++;
@@ -219,8 +217,7 @@ public class Menu {
 			//On vérifie que la liste de préférence est complète
 			if (p1.getPreference().size() != nbPirate) {
 				p1.clearPreference();
-				System.out.println("Liste incomplète");
-				throw new SaisieErroneeException();
+				throw new SaisieErroneeException("Liste incomplète");
 			}
 		} catch (SaisieErroneeException e) {
 			System.out.println("Saisie incorrecte\n");

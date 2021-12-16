@@ -40,16 +40,18 @@ public class Menu2 extends Menu {
 		try {
 			dataInput = new FileReader("files/" + fileName);
 		} catch (IOException e) {
-	   		 //e.printStackTrace();
-	   		 System.out.println("Fichier indiqué non existant");
-	   		 System.exit(1);
+			//e.printStackTrace();
+			System.out.println(e.getMessage());
+			//System.out.println("Fichier indiqué non existant");
+			System.exit(1);
 		}
 		try {
 			analyseData(parseData(".\n"));
 		} catch (DataFichierErroneeException e) {
 			//e.printStackTrace();
-	   		 System.out.println("Données dans le fichier sont incorrectes");
-	   		 System.exit(1);
+			System.out.println(e.getMessage());
+			System.out.println("Données dans le fichier sont incorrectes");
+			System.exit(1);
 		}
 	}
 
@@ -66,7 +68,6 @@ public class Menu2 extends Menu {
 			//trim enleve les espaces qui trainent
 			mots.add(sc2.next().trim());
 		}
-		System.out.println(mots);
 		return mots; 
 	}
 	
@@ -86,7 +87,11 @@ public class Menu2 extends Menu {
 		for (String token : tokens) {
 			indiceDeb = token.indexOf('(')+1;
 			indiceFin = token.indexOf(')');
-			mot = token.substring(indiceDeb, indiceFin);
+			try {
+				mot = token.substring(indiceDeb, indiceFin);
+			}catch(StringIndexOutOfBoundsException e) {
+				throw new DataFichierErroneeException("Lignes incorrectes dans le fichier");
+			}
 			mot = mot.trim();
 			if(token.startsWith("pirate")) {
 				equipage.ajoutPirate(new Pirate(mot));
@@ -138,6 +143,9 @@ public class Menu2 extends Menu {
       	         	System.out.println("Liste de préférence incorrecte pour : "+p.getName());
       	         	System.exit(1);
       			 }
+			}
+			else {
+				throw new DataFichierErroneeException("Lignes incorrectes dans le fichier");
 			}
 		}
 	}
