@@ -25,20 +25,20 @@ public class Menu {
 	protected Equipage equipage;
 	
 	/**
-	 * Contructeur qui demande le nombre de pirates dans l'équipage
+	 * Constructeur qui demande le nombre de pirates dans l'équipage
 	 * 
 	 */
 	public Menu() {
 		sc = new Scanner(System.in);
-		System.out.println("Combien de pirates dans ton équipage ? (entre 1 à 26)");
+		System.out.println("Combien de pirates dans ton équipage ?");
 		do {
 			nbPirate = saisieEntier();
-		}while (nbPirate < 1 || nbPirate > 26);
+		}while (nbPirate < 1);
 		equipage = new Equipage(nbPirate);
 	}
 	
 	/**
-	 * Contructeur utilisé dans Menu2 pour initaliser les attributs de la classe mère
+	 * Constructeur utilisé dans Menu2 pour initaliser les attributs de la classe mère
 	 * @param bool	Boolean pour distinguer ce constructeur
 	 * @see Menu2#Menu2(String)
 	 */

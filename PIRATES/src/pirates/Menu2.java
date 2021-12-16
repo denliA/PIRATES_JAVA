@@ -1,7 +1,6 @@
 package pirates;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.io.File;
@@ -31,6 +30,7 @@ public class Menu2 extends Menu {
 	
 	/**
 	 * Contructeur qui lit les infos sur l'équpage dans un fichier
+	 * @param fileName	Nom du fichier qui contient les données de l'équipage
 	 * 
 	 */
 	public Menu2(String fileName) {
@@ -54,7 +54,11 @@ public class Menu2 extends Menu {
 		
 	}
 
-
+	/**
+	 * Separe le texte du fichier dataInput en des mots séparés par le délimiteur.
+	 * @param str Delimiteur 
+	 * @return Liste de mots
+	 */
 	public ArrayList<String> parseData(String str){
 		ArrayList<String> mots = new ArrayList<String>();
 		sc2 = new Scanner(dataInput);
@@ -64,7 +68,13 @@ public class Menu2 extends Menu {
 		}
 		return mots; 
 	}
-
+	
+	/**
+	 * Analyse les mots qui proviennent du fichier dataInput et crée un équipage selon les données du fichier
+	 * @param tokens Mots
+	 * @throws DataFichierErroneeException	Si les données du fichier sont incorrectes et le programme ne poura pas bien fonctionner
+	 * @see #parseData(String)
+	 */
 	public void analyseData(ArrayList<String> tokens) throws DataFichierErroneeException {
 		int indiceDeb,indiceFin;
 		nbPirate=0;
@@ -135,7 +145,7 @@ public class Menu2 extends Menu {
 	 * 
 	 */
 	public void affiche() {
-		System.out.println("************************** Menu **************************");
+		System.out.println("\n************************** Menu **************************");
 		System.out.println("Rentrez un chiffre selon l'option choisie");
 		System.out.println("1 : résolution automatique\n2 : résolution manuelle\n3 : sauvegarde\n4 : fin");
 		System.out.print(">");
