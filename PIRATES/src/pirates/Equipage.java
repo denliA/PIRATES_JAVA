@@ -96,10 +96,11 @@ public class Equipage {
 	/**
 	 * Ajoute un pirate dans l'équipage
 	 * @param p	Pirate
-	 * @throws DataFichierErroneeException 
 	 */
 	public void ajoutPirate(Pirate p) {
-		pirates.add(p);
+		if (!getPirates().contains(p)) {
+			pirates.add(p);
+		}
 	}
 	
 	/**
@@ -107,18 +108,23 @@ public class Equipage {
 	 * @param b	Butin
 	 */
 	public void ajoutButin(Butin b) {
-		butins.add(b);
+		if (!getButins().contains(b)) {
+			butins.add(b);
+		}
 	}
 	
 	/**
 	 * Rajoute deux pirates qui s'aiment pas dans leur liste de hating
 	 * @param a Pirate
 	 * @param b autre Pirate
+	 * @throws	SaisieErroneeException quand les données entrées sont incohérentes
 	 */
 	public void deteste(String s1,String s2) throws SaisieErroneeException {
-		Pirate a = getPirateFromPirateName(s1);
-		Pirate b = getPirateFromPirateName(s2);
-		if((a==null) || (b==null)) {
+		Pirate a,b;
+		try {
+			a = getPirateFromPirateName(s1);
+			b = getPirateFromPirateName(s2);
+		}catch(PirateNotFoundException e) {
 			throw new SaisieErroneeException("Pirates n'existent pas");
 		}
 		if (a.equals(b)) {
@@ -132,16 +138,16 @@ public class Equipage {
 	 * Donne un Pirate à partir de son nom
 	 * @param name	Nom du Pirate recherché
 	 * @return Pirate trouvé
+	 * @throws PirateNotFoundException quand le nom du pirate ne correspond à aucun Pirate existant
 	 * 
 	 */
-	public Pirate getPirateFromPirateName(String name) {
+	public Pirate getPirateFromPirateName(String name) throws PirateNotFoundException{
 		for (Pirate p : pirates) {
 			if (p.getName().equals(name)) {
 				return p;
 			}
 		}
-		System.out.println("Le pirate " + name + " n'existe pas dans l'équipage");
-		return null;
+		throw new PirateNotFoundException("Le pirate " + name + " n'existe pas dans l'équipage");
 	}
 	
 	/**
@@ -149,10 +155,12 @@ public class Equipage {
 	 * @param name	Nom du Pirate qui possède le trésor
 	 * @param bool Vrai si on utilise fauxPartage
 	 * @return Butin trouvé
+	 * @throws ButinNotFoundException quand le nom du trésor ne correspond à aucun Butin existant
+	 * @throws PirateNotFoundException quand le nom du pirate ne correspond à aucun Pirate existant
 	 * @see #fauxPartage
 	 * 
 	 */
-	public Butin getButinFromPirateName(String name,boolean bool) {
+	public Butin getButinFromPirateName(String name,boolean bool) throws ButinNotFoundException,PirateNotFoundException{
 		HashMap<Pirate,Butin> dict;
 		if(bool) {
 			dict = fauxPartage;
@@ -164,8 +172,7 @@ public class Equipage {
 		if(dict.containsKey(p)) {
 			return dict.get(p);
 		}
-		System.out.println("Le butin de " + name + " n'existe pas");
-		return null;
+		throw new ButinNotFoundException("Le butin de " + name + " n'existe pas");
 	}
 	
 	/**
@@ -173,9 +180,11 @@ public class Equipage {
 	 * Donne un Butin à partir du nom du Pirate qui le détient
 	 * @param name	Nom du Pirate qui possède le trésor
 	 * @return Butin trouvé
+	 * @throws ButinNotFoundException quand le nom du trésor ne correspond à aucun Butin existant
+	 * @throws PirateNotFoundException quand le nom du pirate ne correspond à aucun Pirate existant
 	 * 
 	 */
-	public Butin getButinFromPirateName(String name) {
+	public Butin getButinFromPirateName(String name) throws ButinNotFoundException,PirateNotFoundException{
 		return getButinFromPirateName(name,false);
 	}
 	
@@ -183,16 +192,16 @@ public class Equipage {
 	 * Donne un Butin à partir de son nom. Attention : les noms des trésors vont de "o1" à "o26"
 	 * @param name	Nom du trésor recherché
 	 * @return Butin trouvé
+	 * @throws ButinNotFoundException quand le nom du trésor ne correspond à aucun Butin existant
 	 * 
 	 */
-	public Butin getButinFromButinName(String name) {
+	public Butin getButinFromButinName(String name) throws ButinNotFoundException{
 		for (Butin b : butins) {
 			if (b.getName().equals(name)) {
 				return b;
 			}
 		}
-		//System.out.println("Le butin " + name + " n'existe pas dans l'équipage");
-		return null;
+		throw new ButinNotFoundException("Le butin de " + name + " n'existe pas");
 	} 
 	
 	/**
@@ -472,9 +481,17 @@ public class Equipage {
 		//indices du Butin attribué dans la liste de préférence des pirates
 		int indiceA = -1;
 		int indiceB = -1;
+		Butin oA=null;
+		Butin oB=null;
 		//on récupère les butins que les deux pirates possèdent
-		Butin oA = getButinFromPirateName(a.getName(),bool);
-		Butin oB = getButinFromPirateName(b.getName(),bool);
+		try {
+			oA = getButinFromPirateName(a.getName(),bool);
+			oB = getButinFromPirateName(b.getName(),bool);
+		}catch(ButinNotFoundException e) {
+			System.out.println(e.getMessage());
+		}catch(PirateNotFoundException e) {
+			System.out.println(e.getMessage());
+		}
 		//on parcourt tous les trésors
 		for (int i=0;i<butins.size();i++) {
 			if(a.getPreference().get(i).equals(oA)){
@@ -702,6 +719,9 @@ public class Equipage {
 			//On choisit un pirate au hasard parmi les pirates de l'équipage
 			indiceRandom = (int) Math.floor(Math.random()*(pirates.size()));
 			a = pirates.get(indiceRandom);
+			if (a.getHating().size()==0) {
+				continue;
+			}
 			//On choisit un pirate au hasard parmi les pirates voisins de a (ceux qu'ils déteste)
 			indiceRandom = (int) Math.floor(Math.random()*(a.getHating().size()));
 			b = a.getHating().get(indiceRandom);
@@ -724,35 +744,6 @@ public class Equipage {
 	 * @see #echangerButin(Pirate, Pirate, HashMap)
 	 */
 	public void approximerSolution2(int k) {
-		Pirate a = null;
-		int i = 0;
-		int indiceRandom;
-		
-		//Solution naive
-		attribuerButinAuto();
-		fauxPartage = new HashMap<Pirate,Butin>(partage);
-		
-		while(i<k) {
-			//On choisit un pirate au hasard parmi les pirates de l'équipage
-			indiceRandom = (int) Math.floor(Math.random()*(pirates.size()));
-			a = pirates.get(indiceRandom);
-			//On parcourt tous les pirates qu'il déteste
-			for (Pirate b : a.getHating()) {
-				try {
-					//on modifie le dictionnaire fauxPartage
-					echangerButin(a,b,true);
-				} catch (SaisieErroneeException e) {
-					e.printStackTrace();
-				}
-				if(getCoutIteratif()>getCoutIteratif(true)) {
-					partage = new HashMap<Pirate,Butin>(fauxPartage);
-				}
-			}
-			i++;
-		}
-	}
-	
-	public void approximerSolution3(int k) {
 		initialiserFauxEquipage();
 		Pirate a = null;
 		int i = 0;

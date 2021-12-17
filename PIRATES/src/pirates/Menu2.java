@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class Menu2 extends Menu {
 	/**
 	 * Scanner pour les fichiers
 	 */
-	private static Scanner sc2;
+	private static Scanner myReader;
 	
 	/**
 	 * Contructeur qui lit les infos sur l'équpage dans un fichier
@@ -46,27 +47,30 @@ public class Menu2 extends Menu {
 			System.exit(1);
 		}
 		try {
-			analyseData(parseData(".\n"));
+			//analyseData(parseData(".\n"));
+			lireFichier("files/" + fileName);
+		} catch (FileNotFoundException e) {
+				System.out.println(e.getMessage());
 		} catch (DataFichierErroneeException e) {
-			//e.printStackTrace();
 			System.out.println(e.getMessage());
 			System.out.println("Données dans le fichier sont incorrectes");
 			System.exit(1);
 		}
 	}
-
+	
 	/**
 	 * Separe le texte du fichier dataInput en des mots séparés par le délimiteur.
 	 * @param str Delimiteur 
 	 * @return Liste de mots
+	 * @deprecated car ne permet pas de vérifier qu'une ligne respecte la syntaxe demandée vu qu'on découpe pas par ligne
 	 */
 	public ArrayList<String> parseData(String str){
 		ArrayList<String> mots = new ArrayList<String>();
-		sc2 = new Scanner(dataInput);
-		sc2.useDelimiter(str);
-		while(sc2.hasNext()) {
+		myReader = new Scanner(dataInput);
+		myReader.useDelimiter(str);
+		while(myReader.hasNext()) {
 			//trim enleve les espaces qui trainent
-			mots.add(sc2.next().trim());
+			mots.add(myReader.next().trim());
 		}
 		return mots; 
 	}
@@ -76,6 +80,7 @@ public class Menu2 extends Menu {
 	 * @param tokens Mots
 	 * @throws DataFichierErroneeException	Si les données du fichier sont incorrectes et le programme ne poura pas bien fonctionner
 	 * @see #parseData(String)
+	 * @deprecated car les exceptions sont difficiles à gérer
 	 */
 	public void analyseData(ArrayList<String> tokens) throws DataFichierErroneeException {
 		int indiceDeb,indiceFin;
@@ -83,8 +88,8 @@ public class Menu2 extends Menu {
 		nbPirate=0;
 		StringTokenizer st;
 		String mot,mot2;
-		Pirate p;
-		Butin b;
+		Pirate p = null;;
+		Butin b = null;
 		for (String token : tokens) {
 			indiceDeb = token.indexOf('(')+1;
 			indiceFin = token.indexOf(')');
@@ -130,9 +135,10 @@ public class Menu2 extends Menu {
 				st = new StringTokenizer(mot,",");
 				//on récupère le pirate grace au nom entré
 				mot = st.nextToken();
+				try {
 				p = equipage.getPirateFromPirateName(mot);
-				//si le pirate entré n'existe pas dans l'équipage
-				if(p == null) {
+				}catch(PirateNotFoundException e) {
+					//si le pirate entré n'existe pas dans l'équipage
 					throw new DataFichierErroneeException("Pirate " + p + "n'existe pas");
 				}
 				//si la liste de préférence a déjà été entrée
@@ -146,8 +152,9 @@ public class Menu2 extends Menu {
 				//on recupère les trésors
 				while(st.hasMoreTokens()) {
 					mot = st.nextToken();
+					try {
 					b = equipage.getButinFromButinName(mot);
-					if (b==null) {
+					}catch(ButinNotFoundException e) {
 						throw new DataFichierErroneeException("Butin " + mot + " n'existe pas");
 					}
 					p.addPreference(b);
@@ -164,6 +171,151 @@ public class Menu2 extends Menu {
 		}
 		if(nbPirate!=nbButin) {
 			throw new DataFichierErroneeException("Nombre de pirates different du nombre de trésors");
+		}
+	}
+	
+	/**
+	 * Verifie qu'une ligne se termine bien par ")."
+	 * @param data
+	 * @return Vrai si une ligne se termine par ")."
+	 */
+	public boolean verifPointFinDeLigne(String data) {
+		if (data.equals("")) {
+			return false;
+		}
+
+		String splitted[] = data.split("\\)");
+		if (splitted.length != 2) {
+			return false;
+		}
+		if (splitted[1].equals(".")) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Permet de lire le fichier contenant les valeurs de configuration de
+	 * l'equipage.
+	 * @param nomFichier le fichier de configuration des pirates à lire
+	 * @throws DataFichierErroneeException       Si les données du fichier sont incorrectes et ne permettent pas de construire l'Equipage
+	 * @throws FileNotFoundException Si le fichier donné en argument n'existe pas
+	 */
+	public void lireFichier(String nomFichier) throws DataFichierErroneeException, FileNotFoundException {
+		// pour appliquer la configuration
+		File FIC = new File(nomFichier);
+		myReader = new Scanner(FIC);
+		int numeroLigneFichier = 0;
+
+		while (myReader.hasNextLine()) {
+			String lineData = myReader.nextLine();
+			numeroLigneFichier++;
+
+			if (lineData.equals("")) {
+				throw new DataFichierErroneeException("Ligne vide à la ligne " + numeroLigneFichier, 89);
+			}
+			if (!verifPointFinDeLigne(lineData)) {
+				throw new DataFichierErroneeException(
+						"La ligne ne se finit pas par un seul point à la ligne " + numeroLigneFichier + "\n" + lineData,
+						49);
+			}
+
+			String arguments[] = lineData.split("\\(|\\,|\\).");
+			switch (arguments[0]) {
+			case "pirate":
+				Pirate p = null;
+				if (arguments.length != 2) {
+					throw new DataFichierErroneeException(
+							"Le nombre d'argument n'est pas bon, la syntaxe pour ajouter un pirate n'est pas bonne à la ligne "
+									+ numeroLigneFichier + "\n" + lineData,
+							1);
+				}
+				try {
+					p = equipage.getPirateFromPirateName(arguments[1]);
+					if(p!=null) {
+						throw new DataFichierErroneeException(
+								"Le pirate existe déjà à la ligne " + numeroLigneFichier + "\n" + lineData, 90);
+					}
+				} catch (PirateNotFoundException e) {
+					equipage.ajoutPirate(new Pirate(arguments[1]));
+				}
+				break;
+			case "objet":
+				Butin b = null;
+				if (arguments.length != 2) {
+					throw new DataFichierErroneeException(
+							"Le nombre d'argument n'est pas bon, la syntaxe pour ajouter un objet n'est pas bonne à la ligne "
+									+ numeroLigneFichier + "\n" + lineData,
+							1);
+				}
+				try {
+					b = equipage.getButinFromButinName(arguments[1]);
+					if(b!=null) {
+						throw new DataFichierErroneeException("L'objet existe déjà à la ligne " + numeroLigneFichier + "\n" + lineData,
+								90);
+					}
+				} catch (ButinNotFoundException e) {
+					equipage.ajoutButin(new Butin(arguments[1]));
+				}
+				break;
+			case "deteste":
+				if (arguments.length != 3) {
+					throw new DataFichierErroneeException(
+							"Le nombre d'argument n'est pas bon, la syntaxe pour deteste n'est pas bonne à la ligne "
+									+ numeroLigneFichier + "\n" + lineData,
+							1);
+				}
+				Pirate pDeteste;
+				try {
+					pDeteste = equipage.getPirateFromPirateName(arguments[1]);
+				} catch (PirateNotFoundException e) {
+					throw new DataFichierErroneeException("Le premier pirate " + arguments[1] + " n'existe pas dans deteste à la ligne "
+							+ numeroLigneFichier + "\n" + lineData, 1);
+				}
+
+				try {
+					pDeteste.addHating(equipage.getPirateFromPirateName(arguments[2]));
+				} catch (PirateNotFoundException e) {
+					throw new DataFichierErroneeException("Le deuxième pirate n'existe pas dans deteste à la ligne "
+							+ numeroLigneFichier + "\n" + lineData, 1);
+				}
+				break;
+
+			case "preferences":
+				Pirate pPreference;
+				if (arguments.length != equipage.getPirates().size() + 2) {
+					throw new DataFichierErroneeException(
+							"Le nombre d'argument n'est pas bon, la syntaxe pour preferences n'est pas bonne à la ligne "
+									+ numeroLigneFichier + "\n" + lineData,
+							1);
+				}
+
+				try {
+					pPreference = equipage.getPirateFromPirateName(arguments[1]);
+				} catch (PirateNotFoundException e) {
+					throw new DataFichierErroneeException("Le pirate n'existe pas dans preferences à la ligne " + numeroLigneFichier
+							+ "\n" + lineData, 1);
+				}
+
+				for (int i = 2; i < arguments.length; i++) {
+					try {
+						Butin c = equipage.getButinFromButinName(arguments[i]);
+						pPreference.addPreference(c);
+					} catch (ButinNotFoundException e) {
+						if (e.getCode() == 1) {
+							throw new DataFichierErroneeException("Objet pas présent dans le butin à la ligne " + numeroLigneFichier
+									+ "\n" + lineData, 1);
+						} else {
+							throw new DataFichierErroneeException("Objet déjà présent dans les préférences à la ligne "
+									+ numeroLigneFichier + "\n" + lineData, 1);
+						}
+					}
+				}
+				break;
+			default:
+				throw new DataFichierErroneeException("commande inconnu à la ligne " + numeroLigneFichier + "\n" + lineData, 79);
+
+			}
 		}
 	}
 	
@@ -214,7 +366,7 @@ public class Menu2 extends Menu {
 				System.out.println("Entrez nombre d'itérations cad le nombre d'échanges de butins");
 				nbEchanges = saisieEntier();
 				//equipage.approximerSolution(nbEchanges);
-				equipage.approximerSolution3(nbEchanges);
+				equipage.approximerSolution2(nbEchanges);
 				butinsAttribues = true;
 				System.out.println("\n***** partage des butins *****");
 				equipage.displayPartage();
@@ -288,7 +440,7 @@ public class Menu2 extends Menu {
 	 */
 	public void fermerScanner() {
 		sc.close();
-		sc2.close();
+		myReader.close();
 	}
 	
 	/**

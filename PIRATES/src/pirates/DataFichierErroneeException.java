@@ -5,7 +5,10 @@ package pirates;
  *
  */
 public class DataFichierErroneeException extends Exception {
-
+	/**
+	 * Code qui permet de mieux identifier une exception
+	 */
+	int code;
 	/**
 	 * Sert à la deserialization
 	 */
@@ -16,6 +19,17 @@ public class DataFichierErroneeException extends Exception {
 	 */
 	public DataFichierErroneeException() {
 	    super("Données dans fichier dataInput sont incorrectes");
+	    code = 2;
+	}
+	
+	/**
+	 * Crée l'exception avec un message d'erreur
+	 * @param s	message d'erreur qui permet de mieux identifier une exception
+	 * @param code	entier 
+	 */
+	public DataFichierErroneeException(String s,int code) {
+	    super(s);
+	    this.code = code;
 	}
 	
 	/**
@@ -24,6 +38,15 @@ public class DataFichierErroneeException extends Exception {
 	 */
 	public DataFichierErroneeException(String s) {
 	    super(s);
+	    this.code = 2;
+	}
+	
+	/**
+	 * Donne le code d'erreur
+	 * @return code d'erreur qui est un entier
+	 */
+	public int getCode() {
+		return code;
 	}
 
 }

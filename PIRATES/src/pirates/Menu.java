@@ -184,9 +184,10 @@ public class Menu {
 				throw new SaisieErroneeException();
 			}
 			//on récupère le pirate grace au nom entré
+			try {
 			p1 = equipage.getPirateFromPirateName(chaine);
-			//si le pirate entré n'existe pas dans l'équipage
-			if(p1 == null) {
+			}catch(PirateNotFoundException e) {
+				//si le pirate entré n'existe pas dans l'équipage
 				throw new SaisieErroneeException();
 			}
 			//si la liste de préférence a déjà été entrée
@@ -207,8 +208,9 @@ public class Menu {
 				if (!chaine.matches(regex)) {
 					throw new SaisieErroneeException("Mauvais numéro de trésor entré (1 -> " + nbPirate + ")");
 				}
-				k = equipage.getButinFromButinName("o" + chaine);
-				if(k==null) {
+				try {
+					k = equipage.getButinFromButinName("o" + chaine);
+				}catch(ButinNotFoundException e) {	
 					throw new SaisieErroneeException("Trésor o" + chaine + " n'existe pas");
 				}
 				p1.addPreference(k);
@@ -219,7 +221,7 @@ public class Menu {
 				p1.clearPreference();
 				throw new SaisieErroneeException("Liste incomplète");
 			}
-		} catch (SaisieErroneeException e) {
+		}catch (SaisieErroneeException e) {
 			System.out.println("Saisie incorrecte\n");
 			if (p1 != null) {
 				p1.clearPreference();

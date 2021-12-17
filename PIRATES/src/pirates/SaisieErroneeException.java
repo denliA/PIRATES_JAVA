@@ -5,7 +5,10 @@ package pirates;
  *
  */
 public class SaisieErroneeException extends Exception {
-
+	/**
+	 * Code qui permet de mieux identifier une exception
+	 */
+	int code;
 	/**
 	 * Sert à la deserialization
 	 */
@@ -16,6 +19,17 @@ public class SaisieErroneeException extends Exception {
 	 */
 	public SaisieErroneeException() {
 	    super();
+	    code = 6;
+	}
+	
+	/**
+	 * Crée l'exception avec un message d'erreur
+	 * @param s	message d'erreur
+	 * @param code	entier qui permet de mieux identifier une exception
+	 */
+	public SaisieErroneeException(String s,int code) {
+	    super(s);
+	    this.code = code;
 	}
 	
 	/**
@@ -24,6 +38,7 @@ public class SaisieErroneeException extends Exception {
 	 */
 	public SaisieErroneeException(String s) {
 	    super(s);
+	    this.code = 6;
 	}
 
 }
