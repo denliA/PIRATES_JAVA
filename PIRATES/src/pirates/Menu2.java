@@ -275,7 +275,7 @@ public class Menu2 extends Menu {
 
 				try {
 					pDeteste.addHating(equipage.getPirateFromPirateName(arguments[2]));
-					equipage.getPirateFromPirateName(arguments[2]).addHating(pDeteste);
+					//equipage.getPirateFromPirateName(arguments[2]).addHating(pDeteste);
 				} catch (PirateNotFoundException e) {
 					throw new DataFichierErroneeException("Le deuxième pirate n'existe pas dans deteste à la ligne "
 							+ numeroLigneFichier + "\n" + lineData, 1);
