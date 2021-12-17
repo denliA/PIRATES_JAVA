@@ -696,7 +696,6 @@ public class Equipage {
 		
 		//Solution naive
 		attribuerButinAuto();
-		//shallow or deep copy? Vérifier si modifier partage -> ne modifie pas fauxPartage et vice versa
 		fauxPartage = new HashMap<Pirate,Butin>(partage);
 		
 		while(i<k) {
@@ -714,6 +713,40 @@ public class Equipage {
 			}
 			if(getCoutIteratif()>getCoutIteratif(true)) {
 				partage = new HashMap<Pirate,Butin>(fauxPartage);
+			}
+			i++;
+		}
+	}
+	
+	/**
+	 * Approche une meilleure attribution de butins via une méthode qui choisit un pirate au hasard puis échange les butins avec tous ses ennemis. Attention : ce n'est pas forcément la solution optimale
+	 * @param k	indice pour la boucle. Nombre d'échanges = k * nombre de voisins du pirate choisi
+	 * @see #echangerButin(Pirate, Pirate, HashMap)
+	 */
+	public void approximerSolution2(int k) {
+		Pirate a = null;
+		int i = 0;
+		int indiceRandom;
+		
+		//Solution naive
+		attribuerButinAuto();
+		fauxPartage = new HashMap<Pirate,Butin>(partage);
+		
+		while(i<k) {
+			//On choisit un pirate au hasard parmi les pirates de l'équipage
+			indiceRandom = (int) Math.floor(Math.random()*(pirates.size()));
+			a = pirates.get(indiceRandom);
+			//On parcourt tous les pirates qu'il déteste
+			for (Pirate b : a.getHating()) {
+				try {
+					//on modifie le dictionnaire fauxPartage
+					echangerButin(a,b,true);
+				} catch (SaisieErroneeException e) {
+					e.printStackTrace();
+				}
+				if(getCoutIteratif()>getCoutIteratif(true)) {
+					partage = new HashMap<Pirate,Butin>(fauxPartage);
+				}
 			}
 			i++;
 		}

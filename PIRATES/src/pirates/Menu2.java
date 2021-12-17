@@ -174,7 +174,7 @@ public class Menu2 extends Menu {
 	public void affiche() {
 		System.out.println("\n*************************** Menu **************************");
 		System.out.println("Rentrez un chiffre selon l'option choisie");
-		System.out.println("1 : résolution automatique\n2 : résolution manuelle\n3 : sauvegarde\n4 : fin");
+		System.out.println("0 : résolution automatique\n1 : résolution automatique améliorée\n2 : résolution manuelle\n3 : sauvegarde\n4 : fin");
 		System.out.print(">");
 	}
 	
@@ -195,12 +195,26 @@ public class Menu2 extends Menu {
 			choix = saisieEntier();
 			System.out.println();
 			switch (choix) {
-			case 1 : 
+			case 0 : 
 				equipage.displayEquipageDetail();
 				System.out.println("Solution approximative");
 				System.out.println("Entrez nombre d'itérations cad le nombre d'échanges de butins");
 				nbEchanges = saisieEntier();
+				//equipage.approximerSolution(nbEchanges);
 				equipage.approximerSolution(nbEchanges);
+				butinsAttribues = true;
+				System.out.println("\n***** partage des butins *****");
+				equipage.displayPartage();
+				System.out.println("\n***** cout partage *****");
+				System.out.println(equipage.getCoutIteratif());
+				break;
+			case 1 : 
+				equipage.displayEquipageDetail();
+				System.out.println("Solution approximative ameliorée");
+				System.out.println("Entrez nombre d'itérations cad le nombre d'échanges de butins");
+				nbEchanges = saisieEntier();
+				//equipage.approximerSolution(nbEchanges);
+				equipage.approximerSolution2(nbEchanges);
 				butinsAttribues = true;
 				System.out.println("\n***** partage des butins *****");
 				equipage.displayPartage();
