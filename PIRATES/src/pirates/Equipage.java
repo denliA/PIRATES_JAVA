@@ -751,5 +751,40 @@ public class Equipage {
 			i++;
 		}
 	}
+	
+	public void approximerSolution3(int k) {
+		initialiserFauxEquipage();
+		Pirate a = null;
+		int i = 0;
+		int indiceRandom;
+		
+		//Solution naive
+		attribuerButinAuto();
+		fauxPartage = new HashMap<Pirate,Butin>(partage);
+		
+		while(i<k) {
+			//On choisit un pirate au hasard parmi les pirates de l'équipage
+			if(fauxEquipage.size()==0) {
+				initialiserFauxEquipage();
+			}
+			indiceRandom = (int) Math.floor(Math.random()*(fauxEquipage.size()));
+			a = fauxEquipage.get(indiceRandom);
+			//on evite de chosir un pirate qui a déjà été choisi lors d'une précedente itération
+			fauxEquipage.remove(a);
+			//On parcourt tous les pirates qu'il déteste
+			for (Pirate b : a.getHating()) {
+				try {
+					//on modifie le dictionnaire fauxPartage
+					echangerButin(a,b,true);
+				} catch (SaisieErroneeException e) {
+					e.printStackTrace();
+				}
+				if(getCoutIteratif()>getCoutIteratif(true)) {
+					partage = new HashMap<Pirate,Butin>(fauxPartage);
+				}
+			}
+			i++;
+		}
+	}
 
 }

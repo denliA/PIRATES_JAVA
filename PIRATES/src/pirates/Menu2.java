@@ -214,7 +214,7 @@ public class Menu2 extends Menu {
 				System.out.println("Entrez nombre d'itérations cad le nombre d'échanges de butins");
 				nbEchanges = saisieEntier();
 				//equipage.approximerSolution(nbEchanges);
-				equipage.approximerSolution2(nbEchanges);
+				equipage.approximerSolution3(nbEchanges);
 				butinsAttribues = true;
 				System.out.println("\n***** partage des butins *****");
 				equipage.displayPartage();
