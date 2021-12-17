@@ -176,7 +176,7 @@ public class Menu2 extends Menu {
 	
 	/**
 	 * Verifie qu'une ligne se termine bien par ")."
-	 * @param data
+	 * @param data	Ligne à vérifier (=String)
 	 * @return Vrai si une ligne se termine par ")."
 	 */
 	public boolean verifPointFinDeLigne(String data) {
@@ -275,6 +275,7 @@ public class Menu2 extends Menu {
 
 				try {
 					pDeteste.addHating(equipage.getPirateFromPirateName(arguments[2]));
+					equipage.getPirateFromPirateName(arguments[2]).addHating(pDeteste);
 				} catch (PirateNotFoundException e) {
 					throw new DataFichierErroneeException("Le deuxième pirate n'existe pas dans deteste à la ligne "
 							+ numeroLigneFichier + "\n" + lineData, 1);

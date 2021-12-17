@@ -47,7 +47,7 @@ public class Pirate {
 	
 	/**
 	 * Crée un pirate dont le nom est passé en paramètres
-	 *
+	 * @param name Nom du Pirate
 	 */
 	public Pirate(String name) {
 		this.name = name;
@@ -168,6 +168,7 @@ public class Pirate {
 		//On se déteste pas soi meme
 		if ((a instanceof Pirate) && (!this.equals(a))){
 			hating.add(a);
+			a.getHating().add(this);
 		}
 	}
 	

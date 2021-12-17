@@ -12,7 +12,7 @@ public class Test {
 		String fileName = args[0];
 		//fileName = "equipage1.txt";
 		//fileName = "equipage2.txt";
-		fileName = "equipage3.txt";
+		//fileName = "equipage3.txt";
 		
 		//Menu m1 = new Menu();
 		//m1.interfaceTextuelle1();

@@ -8,8 +8,7 @@ import java.util.Scanner;
 public class Menu {
 	/**
 	 * Unique Scanner pour les I/O. On accède au scanner via les méthodes suivantes :
-	 * @see #saisieEntier()
-	 * @see #saisieLigne()
+	 * 
 	 */
 	protected static Scanner sc;
 	

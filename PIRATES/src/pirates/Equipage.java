@@ -115,8 +115,8 @@ public class Equipage {
 	
 	/**
 	 * Rajoute deux pirates qui s'aiment pas dans leur liste de hating
-	 * @param a Pirate
-	 * @param b autre Pirate
+	 * @param s1 Pirate
+	 * @param s2 autre Pirate
 	 * @throws	SaisieErroneeException quand les données entrées sont incohérentes
 	 */
 	public void deteste(String s1,String s2) throws SaisieErroneeException {
@@ -130,8 +130,10 @@ public class Equipage {
 		if (a.equals(b)) {
 			throw new SaisieErroneeException("Pas de self hate svp");
 		}
+		System.out.println(a.getName());
+		System.out.println(b.getName());
 		a.addHating(b);
-		b.addHating(a);
+		//b.addHating(a);
 	}
 	
 	/**
@@ -538,6 +540,7 @@ public class Equipage {
 	 * Modifie la valeur de l'attribut jealous de tous les pirates de l'équipage
 	 * <p>
 	 * Si un Pirate est jaloux de plusieurs autres pirates, il ne compte qu'une fois dans getCoutIteratif()
+	 * @param bool Vrai si on utilise fauxPartage pour approximer une solution optimale
 	 * @see #getCoutIteratif()
 	 * 
 	 */
@@ -703,7 +706,7 @@ public class Equipage {
 	/**
 	 * Approche une meilleure attribution de butins via une méthode naive. Attention : ce n'est pas forcément la solution optimale
 	 * @param k	indice pour la boucle qui correspond au nombre d'echanges de butins
-	 * @see #echangerButin(Pirate, Pirate, HashMap)
+	 * 
 	 */
 	public void approximerSolution(int k) {
 		Pirate a = null;
@@ -741,7 +744,7 @@ public class Equipage {
 	/**
 	 * Approche une meilleure attribution de butins via une méthode qui choisit un pirate au hasard puis échange les butins avec tous ses ennemis. Attention : ce n'est pas forcément la solution optimale
 	 * @param k	indice pour la boucle. Nombre d'échanges = k * nombre de voisins du pirate choisi
-	 * @see #echangerButin(Pirate, Pirate, HashMap)
+	 * 
 	 */
 	public void approximerSolution2(int k) {
 		initialiserFauxEquipage();
